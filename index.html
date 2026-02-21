@@ -2,10 +2,11 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Studio Game Musketeers | KEYİFLİ, ZORLAYICI OYUNLAR</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fontlar Birleştirildi -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Roboto:wght@400;700;900&family=Patrick+Hand&display=swap" rel="stylesheet">
 
     <style>
         /* --- TEMA DEĞİŞKENLERİ --- */
@@ -60,21 +61,18 @@
 
         .studio-title {
             font-family: 'Orbitron', sans-serif;
-            /* Mobilde ekrana sığması için min değer 1.5rem'e düşürüldü */
             font-size: clamp(1.5rem, 8vw, 6.5rem); 
             font-weight: 900;
             color: transparent;
             -webkit-text-stroke: 1px var(--text-main);
             text-transform: uppercase;
-            /* Harf aralığı mobilde daralıp PC'de açılacak şekilde dinamik yapıldı */
             letter-spacing: clamp(2px, 2vw, 8px); 
-            line-height: 1.2; /* Metin alt satıra kayarsa düzgün dursun */
+            line-height: 1.2; 
             position: relative;
             margin-bottom: 1rem;
             animation: textGlow 3s ease-in-out infinite alternate;
         }
 
-        /* Başlığın içini hafif neon ile doldurma efekti */
         .studio-title::before {
             content: "Studio Game Musketeers";
             position: absolute;
@@ -118,11 +116,10 @@
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Telefonlar için 280px'e düşürüldü */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2.5rem;
         }
 
-        /* Cam Efektli Kart Tasarımı */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -137,9 +134,9 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
+            gap: 1.5rem; /* Butonlarla metin aralığı */
         }
 
-        /* Kart Üzerine Gelme (Hover) Neon Parlaması */
         .glass-card:hover {
             transform: translateY(-10px);
             border-color: rgba(0, 243, 255, 0.5);
@@ -169,8 +166,13 @@
         .game-desc {
             font-size: 1.1rem;
             color: var(--text-muted);
-            margin-bottom: 2.5rem;
             line-height: 1.7;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         /* --- BUTONLAR --- */
@@ -190,6 +192,7 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            cursor: pointer;
         }
 
         .btn-active {
@@ -211,6 +214,19 @@
             border: 1px solid #334155;
             cursor: not-allowed;
             pointer-events: none;
+        }
+
+        .btn-demo {
+            background: rgba(188, 19, 254, 0.1);
+            color: var(--neon-purple);
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
+        }
+        
+        .btn-demo:hover {
+            background: var(--neon-purple);
+            color: #fff;
+            box-shadow: 0 0 30px var(--neon-purple);
         }
 
         .btn-dev {
@@ -253,22 +269,173 @@
             letter-spacing: 1px;
         }
 
-        /* Animasyonlar */
         @keyframes textGlow {
             from { text-shadow: 0 0 10px rgba(0, 243, 255, 0.2), 0 0 20px rgba(0, 243, 255, 0.2); }
             to { text-shadow: 0 0 20px rgba(0, 243, 255, 0.6), 0 0 40px rgba(0, 243, 255, 0.4); }
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .hero { padding: 1rem; }
             .portfolio-section { padding: 3rem 1.5rem 6rem 1.5rem; }
             .glass-card { padding: 2rem 1.5rem; }
         }
+
+        /* ==========================================================
+           MİNİ OYUN (DEMO) MODALI VE STİLLERİ
+           ========================================================== */
+        #demo-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 1000; display: none; justify-content: center; align-items: center;
+        }
+        
+        #demo-modal.active { display: flex; }
+
+        .close-modal {
+            position: absolute; top: 20px; right: 20px;
+            color: white; font-size: 40px; font-weight: bold;
+            cursor: pointer; z-index: 1001; font-family: sans-serif;
+            transition: color 0.3s; line-height: 1;
+        }
+        .close-modal:hover { color: var(--neon-pink); }
+
+        #ad-container {
+            position: relative;
+            width: 100%; max-width: 360px; height: 90vh; max-height: 640px; /* Ekrana tam sığması için */
+            background-color: #f4f4f4; 
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 0 4px #222;
+            border-radius: 12px;
+            user-select: none; -webkit-tap-highlight-color: transparent;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #notebook-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: repeating-linear-gradient(transparent, transparent 39px, #d1d9e6 39px, #d1d9e6 40px);
+            z-index: 0; pointer-events: none;
+        }
+        #notebook-bg::before { 
+            content: ''; position: absolute; top: 0; left: 45px; width: 1px; height: 100%; background-color: #ff9999;
+        }
+
+        #ui-top {
+            position: absolute; top: 10px; left: 0; width: 100%; height: 80px;
+            display: flex; flex-direction: column; z-index: 10; pointer-events: none;
+        }
+        
+        .score-row { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; }
+        .player-badge { display: flex; align-items: center; gap: 8px; }
+        
+        .triangle-icon {
+            width: 40px; height: 35px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 14px; font-weight: bold; color: white;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        .p1-icon { background-color: #a82721; } 
+        .p2-icon { background-color: #1e3a8a; } 
+        
+        .score-val { font-size: 26px; font-weight: 400; color: #000; }
+        .score-val.red { color: #d32f2f; transition: transform 0.3s; }
+        .score-val.blue { color: #1976d2; }
+
+        .moves-row { padding: 5px 0 0 15px; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .moves-text { font-size: 22px; color: #1976d2; font-weight: 900; opacity: 0; transition: opacity 0.5s, transform 0.3s; }
+        .moves-highlight { transform: scale(1.3); color: #e74c3c; }
+
+        #demo-game-canvas { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); z-index: 5; touch-action: none; }
+
+        #instruction {
+            position: absolute; top: 12%; width: 100%; text-align: center;
+            font-size: 28px; font-weight: 900; color: #e74c3c;
+            text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff;
+            z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.5s;
+            font-family: 'Patrick Hand', cursive; 
+        }
+
+        #zar-container {
+            position: absolute; bottom: 30px; left: 0; width: 100%;
+            display: flex; justify-content: center; z-index: 20;
+        }
+        .zar-btn {
+            background-color: #8bc34a; color: #000;
+            font-size: 32px; padding: 10px 60px; font-weight: 900;
+            border-radius: 10px; border: 3px solid #1b5e20;
+            cursor: pointer; box-shadow: 0 4px 0 #1b5e20, inset 0 0 15px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 10px);
+            animation: pulseBtn 1.5s infinite; transition: transform 0.1s;
+        }
+        .zar-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #1b5e20; }
+
+        #dice-box {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 90px; height: 90px; background: #fff;
+            border: 4px solid #2c3e50; border-radius: 18px;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+            display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+            padding: 10px; gap: 5px;
+            z-index: 25; opacity: 0; pointer-events: none;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s;
+        }
+        
+        .dice-dot { background-color: #2c3e50; width: 16px; height: 16px; border-radius: 50%; justify-self: center; align-self: center; opacity: 0; }
+
+        .dice-anim { animation: rollDice 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .dice-fly { animation: flyToMoves 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards; }
+
+        .face-1 .d5 { opacity: 1; }
+        .face-2 .d1, .face-2 .d9 { opacity: 1; }
+        .face-3 .d1, .face-3 .d5, .face-3 .d9 { opacity: 1; }
+        .face-4 .d1, .face-4 .d3, .face-4 .d7, .face-4 .d9 { opacity: 1; }
+        .face-5 .d1, .face-5 .d3, .face-5 .d5, .face-5 .d7, .face-5 .d9 { opacity: 1; }
+        .face-6 .d1, .face-6 .d3, .face-6 .d4, .face-6 .d6, .face-6 .d7, .face-6 .d9 { opacity: 1; }
+
+        #tutorial-finger { position: absolute; width: 50px; height: 50px; z-index: 30; pointer-events: none; opacity: 0; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+
+        .pop-score {
+            position: absolute; font-size: 45px; font-weight: 900; color: #f1c40f;
+            text-shadow: 2px 2px 0 #000; z-index: 35; opacity: 0; pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+        }
+        .pop-anim { animation: popUp 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        #end-card {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 250, 243, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.5s;
+        }
+        .end-logo { font-size: 46px; font-weight: 900; color: #1a1a1a; margin-bottom: 5px; }
+        .end-sub { font-size: 20px; color: #e74c3c; margin-bottom: 40px; font-weight: bold; }
+        .download-btn {
+            background: #2196f3; color: white; border: none; padding: 15px 40px; font-size: 26px; font-weight: 900;
+            border-radius: 30px; box-shadow: 0 8px 15px rgba(33, 150, 243, 0.4); text-decoration: none;
+            animation: pulseBtn 1s infinite; pointer-events: auto;
+        }
+
+        @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes rollDice { 
+            0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; } 
+            20% { transform: translate(-50%, -50%) scale(1.2) rotate(180deg); opacity: 1; } 
+            80% { transform: translate(-50%, -50%) scale(1) rotate(720deg); opacity: 1; } 
+            100% { transform: translate(-50%, -50%) scale(1) rotate(720deg); opacity: 1; } 
+        }
+        @keyframes flyToMoves {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-140px, -230px) scale(0.2); opacity: 0; }
+        }
+        @keyframes popUp { 
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 
+            20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 
+            80% { transform: translate(-50%, -60%) scale(1); opacity: 1; } 
+            100% { transform: translate(-50%, -80%) scale(1.5); opacity: 0; } 
+        }
     </style>
 </head>
 <body>
 
+    <!-- SİTENİN ARKA PLANI -->
     <canvas id="geometry-canvas"></canvas>
 
     <header class="hero">
@@ -286,7 +453,9 @@
                     <h3 class="game-title">The Shape Universe</h3>
                     <p class="game-desc">Zeka ve stratejiyi birleştiren, evrenin sınırlarını zorlayan mobil bulmaca/aksiyon deneyimi. Kuralları sen belirle, evreni şekillendir.</p>
                 </div>
-                <a href="https://play.google.com/store/apps/details?id=com.StudioGameMUSKETEERS.TheShapeUniverse" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
+                <div class="btn-group">
+                    <a href="https://play.google.com/store/apps/details?id=com.StudioGameMUSKETEERS.TheShapeUniverse" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
+                </div>
             </div>
 
             <div class="glass-card">
@@ -294,7 +463,11 @@
                     <h3 class="game-title">Shape Duels</h3>
                     <p class="game-desc">Rekabetçi ve dinamik yapısıyla rakiplerine karşı şekillerin gücünü kullanarak düello yap. Arena yeteneklerini test etmeni bekliyor.</p>
                 </div>
-                <a href="https://play.google.com/store/apps/details?id=com.StudioGameMusketeers.ShapeDuels" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
+                <div class="btn-group">
+                    <!-- DEMO BUTONU EKLENDİ -->
+                    <button onclick="openDemoModal()" class="btn btn-demo">DEMOYU OYNA</button>
+                    <a href="https://play.google.com/store/apps/details?id=com.StudioGameMusketeers.ShapeDuels" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
+                </div>
             </div>
 
             <div class="glass-card">
@@ -302,7 +475,9 @@
                     <h3 class="game-title">İsimsiz Uzay Projesi</h3>
                     <p class="game-desc">Yukarıdan bakışlı (top-down), mermi cehennemi (bullet hell) türünde roguelike uzay macerası. Uzay mekiği pilotu olarak "void credit" topla ve hayatta kal.</p>
                 </div>
-                <a href="#" class="btn btn-dev">Geliştirme Aşamasında</a>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-dev">Geliştirme Aşamasında</a>
+                </div>
             </div>
 
         </div>
@@ -313,165 +488,484 @@
         <p class="copyright">&copy; 2026 Studio Game Musketeers. Tüm Hakları Saklıdır.</p>
     </footer>
 
-    <script>
-        const canvas = document.getElementById('geometry-canvas');
-        const ctx = canvas.getContext('2d');
+    <!-- ========================================== -->
+    <!-- SHAPE DUELS OYNANABİLİR DEMO (MODAL)       -->
+    <!-- ========================================== -->
+    <div id="demo-modal">
+        <div class="close-modal" onclick="closeDemoModal()">&times;</div>
+        
+        <div id="ad-container">
+            <div id="notebook-bg"></div>
+    
+            <div id="ui-top">
+                <div class="score-row">
+                    <div class="player-badge">
+                        <div class="triangle-icon p1-icon">P1</div>
+                        <span class="score-val red" id="score-val">11</span>
+                    </div>
+                    <div class="player-badge">
+                        <div class="triangle-icon p2-icon">P2</div>
+                        <span class="score-val blue">8</span>
+                    </div>
+                </div>
+                
+                <div class="moves-row">
+                    <div class="moves-text" id="moves-ui">HAK: <span id="moves-val">0</span></div>
+                </div>
+            </div>
+    
+            <canvas id="demo-game-canvas"></canvas>
+    
+            <div id="instruction">NOKTALARI BİRLEŞTİR!</div>
+    
+            <svg id="tutorial-finger" viewBox="0 0 24 24" fill="#ffffff" stroke="#2c3e50" stroke-width="1.5">
+                <path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 3-1.42 4.14-1.42 1.34 0 2.86 1.05 2.86 2.68 0 1.25-1.12 2.89-2.58 4.78C17.06 19.04 15.38 21 13 21H9.8c-1.8 0-3.66-1.13-4.59-2.73L3.6 15.5c-.39-.68-.2-1.55.43-1.99.64-.45 1.52-.36 2.05.23l2.92 3.25V7.5"/>
+            </svg>
+    
+            <div id="pop-container"></div>
+    
+            <!-- Noktalı Zar Tasarımı -->
+            <div id="dice-box" class="face-1">
+                <div class="dice-dot d1"></div> <div class="dice-dot d2"></div> <div class="dice-dot d3"></div>
+                <div class="dice-dot d4"></div> <div class="dice-dot d5"></div> <div class="dice-dot d6"></div>
+                <div class="dice-dot d7"></div> <div class="dice-dot d8"></div> <div class="dice-dot d9"></div>
+            </div>
+    
+            <div id="zar-container">
+                <div class="zar-btn" onclick="startDemoGame()">ZAR AT</div>
+            </div>
+    
+            <div id="end-card">
+                <div class="end-logo">SHAPE DUELS</div>
+                <div class="end-sub">Sıra Sende!</div>
+                <a href="https://play.google.com/store/apps/details?id=com.StudioGameMusketeers.ShapeDuels" target="_blank" class="download-btn">HEMEN İNDİR</a>
+            </div>
+        </div>
+    </div>
 
-        let width, height;
-        let shapes = [];
-        const colors = [
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT: ARKA PLAN VE MİNİ OYUN KODLARI -->
+    <!-- ========================================== -->
+    <script>
+        /* ----------------------------------------------------
+           1. PORTFOLYO ARKA PLAN ANİMASYONU (Geometrik Şekiller)
+           ---------------------------------------------------- */
+        const bgCanvas = document.getElementById('geometry-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+
+        let bgWidth, bgHeight;
+        let bgShapes = [];
+        const bgColors = [
             'rgba(0, 243, 255, 0.8)', // Cyan
             'rgba(188, 19, 254, 0.8)', // Purple
             'rgba(255, 0, 85, 0.8)'    // Pink
         ];
         
-        // Fare Pozisyonu
         let mouse = { x: -1000, y: -1000 };
 
-        // Fare Hareketleri
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseout', () => { mouse.x = -1000; mouse.y = -1000; });
+        window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; }, { passive: true });
+        window.addEventListener('touchend', () => { mouse.x = -1000; mouse.y = -1000; });
 
-        window.addEventListener('mouseout', () => {
-            mouse.x = -1000;
-            mouse.y = -1000;
-        });
-
-        // Mobil Dokunmatik (Touch) Desteği
-        window.addEventListener('touchmove', (e) => {
-            mouse.x = e.touches[0].clientX;
-            mouse.y = e.touches[0].clientY;
-        }, { passive: true });
-
-        window.addEventListener('touchend', () => {
-            mouse.x = -1000;
-            mouse.y = -1000;
-        });
-
-        // Ekran boyutu ayarı (Mobil Optimizasyonlu)
         let lastWidth = window.innerWidth;
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            
-            // Sadece ekranın genişliği değişirse şekilleri sıfırla (Telefonda aşağı kaydırırken pırpır yapmayı engeller)
-            if (shapes.length === 0 || window.innerWidth !== lastWidth) {
-                initShapes();
+        function resizeBg() {
+            bgWidth = bgCanvas.width = window.innerWidth;
+            bgHeight = bgCanvas.height = window.innerHeight;
+            if (bgShapes.length === 0 || window.innerWidth !== lastWidth) {
+                initBgShapes();
                 lastWidth = window.innerWidth;
             }
         }
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', resizeBg);
         
-        // Şekil Sınıfı Oluşturma
-        class Shape {
+        class BgShape {
             constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = Math.random() * 30 + 15; // Boyut 15 - 45 arası
-                this.type = Math.floor(Math.random() * 3); // 0: Üçgen, 1: Kare, 2: Altıgen
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Hız ve rotasyon
+                this.x = Math.random() * bgWidth;
+                this.y = Math.random() * bgHeight;
+                this.size = Math.random() * 30 + 15; 
+                this.type = Math.floor(Math.random() * 3); 
+                this.color = bgColors[Math.floor(Math.random() * bgColors.length)];
                 this.vx = (Math.random() - 0.5) * 1;
                 this.vy = (Math.random() - 0.5) * 1;
                 this.angle = Math.random() * Math.PI * 2;
                 this.vAngle = (Math.random() - 0.5) * 0.02;
             }
-
             draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle);
-                
-                ctx.beginPath();
-                
-                // Şekil Çizimleri
+                bgCtx.save();
+                bgCtx.translate(this.x, this.y);
+                bgCtx.rotate(this.angle);
+                bgCtx.beginPath();
                 if (this.type === 0) {
-                    // Üçgen
-                    ctx.moveTo(0, -this.size);
-                    ctx.lineTo(this.size, this.size);
-                    ctx.lineTo(-this.size, this.size);
+                    bgCtx.moveTo(0, -this.size); bgCtx.lineTo(this.size, this.size); bgCtx.lineTo(-this.size, this.size);
                 } else if (this.type === 1) {
-                    // Kare
-                    ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
+                    bgCtx.rect(-this.size/2, -this.size/2, this.size, this.size);
                 } else {
-                    // Altıgen (Çokgen)
                     for (let i = 0; i < 6; i++) {
-                        ctx.lineTo(this.size * Math.cos(i * Math.PI / 3), 
-                                   this.size * Math.sin(i * Math.PI / 3));
+                        bgCtx.lineTo(this.size * Math.cos(i * Math.PI / 3), this.size * Math.sin(i * Math.PI / 3));
                     }
                 }
-                ctx.closePath();
-
-                // Neon Efekti
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = this.color;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
-                ctx.stroke();
-
-                // Yarı saydam iç dolgu
-                ctx.fillStyle = this.color.replace('0.8)', '0.05)');
-                ctx.fill();
-
-                ctx.restore();
+                bgCtx.closePath();
+                bgCtx.lineWidth = 2; bgCtx.strokeStyle = this.color; bgCtx.shadowBlur = 15; bgCtx.shadowColor = this.color; bgCtx.stroke();
+                bgCtx.fillStyle = this.color.replace('0.8)', '0.05)'); bgCtx.fill();
+                bgCtx.restore();
             }
-
             update() {
-                // Konum Güncelleme
-                this.x += this.vx;
-                this.y += this.vy;
-                this.angle += this.vAngle;
-
-                // Fareden/Parmaktan kaçma efekti (Repel)
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
+                this.x += this.vx; this.y += this.vy; this.angle += this.vAngle;
+                let dx = mouse.x - this.x; let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
                 let maxDist = 150;
-
                 if (distance < maxDist) {
                     let force = (maxDist - distance) / maxDist;
-                    this.x -= (dx / distance) * force * 3;
-                    this.y -= (dy / distance) * force * 3;
+                    this.x -= (dx / distance) * force * 3; this.y -= (dy / distance) * force * 3;
                 }
-
-                // Ekran sınırlarından geri dönme (Sonsuz döngü hissi)
-                if (this.x < -this.size) this.x = width + this.size;
-                if (this.x > width + this.size) this.x = -this.size;
-                if (this.y < -this.size) this.y = height + this.size;
-                if (this.y > height + this.size) this.y = -this.size;
+                if (this.x < -this.size) this.x = bgWidth + this.size;
+                if (this.x > bgWidth + this.size) this.x = -this.size;
+                if (this.y < -this.size) this.y = bgHeight + this.size;
+                if (this.y > bgHeight + this.size) this.y = -this.size;
             }
         }
 
-        // Şekilleri oluştur
-        function initShapes() {
-            shapes = [];
-            // Ekran boyutuna göre şekil sayısı belirle (mobilde daha az, PC'de daha çok)
+        function initBgShapes() {
+            bgShapes = [];
             const numShapes = window.innerWidth < 768 ? 20 : 50; 
-            for (let i = 0; i < numShapes; i++) {
-                shapes.push(new Shape());
+            for (let i = 0; i < numShapes; i++) { bgShapes.push(new BgShape()); }
+        }
+
+        function animateBg() {
+            bgCtx.fillStyle = 'rgba(3, 4, 9, 0.3)'; 
+            bgCtx.fillRect(0, 0, bgWidth, bgHeight);
+            bgShapes.forEach(shape => { shape.update(); shape.draw(); });
+            requestAnimationFrame(animateBg);
+        }
+
+        resizeBg(); 
+        animateBg();
+
+        /* ----------------------------------------------------
+           2. SHAPE DUELS MİNİ OYUN (DEMO) KODLARI
+           ---------------------------------------------------- */
+        const demoCanvas = document.getElementById('demo-game-canvas');
+        const demoCtx = demoCanvas.getContext('2d');
+        
+        let dWidth, dHeight;
+        const spacing = 40; 
+        const cols = 9, rows = 12; 
+        let dOffsetX, dOffsetY;
+
+        let gameDots = [];
+        let gameLines = new Set(); 
+        let gameTriangles = new Set(); 
+        let drawnLinesCoords = []; 
+        let filledTrianglesCoords = []; 
+
+        let gameState = 'WAITING_FOR_DICE'; 
+        let movesLeft = 0;
+        let playerScore = 11; 
+
+        let isDragging = false;
+        let startDot = null;
+        let currentMouseX = 0;
+        let currentMouseY = 0;
+        let demoAnimFrame;
+
+        // Modal Açma/Kapama
+        function openDemoModal() {
+            document.getElementById('demo-modal').classList.add('active');
+            resetDemoGame();
+            initDemoCanvas();
+        }
+
+        function closeDemoModal() {
+            document.getElementById('demo-modal').classList.remove('active');
+            cancelAnimationFrame(demoAnimFrame);
+        }
+
+        function resetDemoGame() {
+            gameState = 'WAITING_FOR_DICE';
+            movesLeft = 0;
+            playerScore = 11;
+            document.getElementById('score-val').innerText = '11';
+            document.getElementById('moves-val').innerText = '0';
+            document.getElementById('moves-ui').style.opacity = '0';
+            document.getElementById('instruction').style.opacity = '0';
+            document.getElementById('zar-container').style.display = 'flex';
+            
+            const dice = document.getElementById('dice-box');
+            dice.style.display = 'grid';
+            dice.style.opacity = '0';
+            dice.className = 'face-1'; // Reset class
+            
+            document.getElementById('tutorial-finger').style.opacity = '0';
+            document.getElementById('tutorial-finger').style.display = 'block';
+            
+            document.getElementById('end-card').style.opacity = '0';
+            document.getElementById('end-card').style.pointerEvents = 'none';
+            
+            gameLines.clear();
+            gameTriangles.clear();
+            drawnLinesCoords = [];
+            filledTrianglesCoords = [];
+            
+            // POP-UPLARI TEMİZLE
+            document.getElementById('pop-container').innerHTML = '';
+        }
+
+        function initDemoCanvas() {
+            dWidth = demoCanvas.clientWidth; dHeight = demoCanvas.clientHeight;
+            const dpr = window.devicePixelRatio || 1;
+            demoCanvas.width = dWidth * dpr; demoCanvas.height = dHeight * dpr;
+            demoCtx.scale(dpr, dpr);
+
+            dOffsetX = (dWidth - ((cols - 1) * spacing)) / 2;
+            dOffsetY = (dHeight - ((rows - 1) * (spacing * 0.866))) / 2 + 10;
+            
+            generateDemoGrid();
+            setupDemoPreGame(); 
+            cancelAnimationFrame(demoAnimFrame);
+            drawDemoLoop();
+        }
+
+        window.addEventListener('resize', () => {
+            if(document.getElementById('demo-modal').classList.contains('active')) {
+                initDemoCanvas();
+            }
+        });
+
+        function generateDemoGrid() {
+            gameDots = [];
+            for(let r=0; r<rows; r++) {
+                for(let c=0; c<cols; c++) {
+                    if (r % 2 === 0 && c === cols - 1) continue; 
+                    const xShift = (r % 2 === 0) ? spacing / 2 : 0;
+                    const x = dOffsetX + c * spacing + xShift;
+                    const y = dOffsetY + r * (spacing * 0.866);
+                    gameDots.push({ id: `${c}_${r}`, x, y, c, r });
+                }
             }
         }
 
-        // Animasyon Döngüsü
-        function animate() {
-            // Arka planı hafif saydam temizle ki hareket izi (trail) oluşsun
-            ctx.fillStyle = 'rgba(3, 4, 9, 0.3)'; 
-            ctx.fillRect(0, 0, width, height);
+        function getLineId(d1, d2) { return [d1.id, d2.id].sort().join('-'); }
+        function getTriangleId(d1, d2, d3) { return [d1.id, d2.id, d3.id].sort().join('-'); }
+        function getDistance(x1, y1, x2, y2) { return Math.hypot(x2 - x1, y2 - y1); }
 
-            shapes.forEach(shape => {
-                shape.update();
-                shape.draw();
+        function setupDemoPreGame() {
+            function addLine(c1, r1, c2, r2, color) {
+                const d1 = gameDots.find(d => d.c===c1 && d.r===r1); const d2 = gameDots.find(d => d.c===c2 && d.r===r2);
+                if(d1 && d2) { gameLines.add(getLineId(d1, d2)); drawnLinesCoords.push({ p1: d1, p2: d2, color: color }); }
+            }
+            addLine(4,4, 5,4, '#ff0000'); addLine(3,5, 4,5, '#ff0000'); addLine(4,4, 3,5, '#0000ff');
+            addLine(5,4, 4,5, '#ff0000'); addLine(4,4, 4,5, '#ff0000'); addLine(4,5, 4,6, '#ff0000');
+            addLine(3,5, 4,6, '#0000ff'); addLine(3,6, 4,6, '#ff0000'); addLine(3,6, 3,5, '#0000ff');
+            addLine(3,6, 4,7, '#ff0000'); addLine(4,6, 4,7, '#0000ff'); addLine(4,7, 5,7, '#ff0000');
+            
+            function addTri(c1, r1, c2, r2, c3, r3, color) {
+                const d1 = gameDots.find(d => d.c===c1 && d.r===r1); const d2 = gameDots.find(d => d.c===c2 && d.r===r2); const d3 = gameDots.find(d => d.c===c3 && d.r===r3);
+                if(d1&&d2&&d3) { gameTriangles.add(getTriangleId(d1,d2,d3)); filledTrianglesCoords.push({ p1: d1, p2: d2, p3: d3, color: color }); }
+            }
+            addTri(4,4, 5,4, 4,5, 'rgba(255,0,0,0.5)'); addTri(4,4, 3,5, 4,5, 'rgba(0,0,255,0.5)');
+            addTri(3,5, 3,6, 4,6, 'rgba(255,0,0,0.5)'); addTri(4,6, 4,7, 5,7, 'rgba(0,0,255,0.5)');
+        }
+
+        function startDemoGame() {
+            if(gameState !== 'WAITING_FOR_DICE') return;
+            document.getElementById('zar-container').style.display = 'none';
+            
+            const dice = document.getElementById('dice-box');
+            dice.style.opacity = '1';
+            dice.classList.add('dice-anim');
+            
+            let rollCount = 0;
+            let shuffle = setInterval(() => { 
+                let randomFace = Math.floor(Math.random() * 6) + 1;
+                dice.className = `face-${randomFace} dice-anim`;
+                rollCount++;
+            }, 100);
+            
+            setTimeout(() => {
+                clearInterval(shuffle);
+                dice.className = 'face-4'; 
+                
+                setTimeout(() => {
+                    dice.classList.remove('dice-anim');
+                    dice.classList.add('dice-fly');
+                    
+                    setTimeout(() => {
+                        dice.style.display = 'none';
+                        dice.classList.remove('dice-fly');
+                        movesLeft = 4;
+                        
+                        const movesUI = document.getElementById('moves-ui');
+                        const movesVal = document.getElementById('moves-val');
+                        
+                        movesUI.style.opacity = '1';
+                        movesVal.innerText = movesLeft;
+                        
+                        movesUI.classList.add('moves-highlight');
+                        setTimeout(() => movesUI.classList.remove('moves-highlight'), 300);
+                        
+                        document.getElementById('instruction').style.opacity = '1';
+                        
+                        gameState = 'PLAYING';
+                        showDemoTutorialSwipe();
+                    }, 800);
+                }, 800);
+            }, 1200);
+        }
+
+        function showDemoTutorialSwipe() {
+            const finger = document.getElementById('tutorial-finger');
+            const d1 = gameDots.find(d => d.c===3 && d.r===6); 
+            const d2 = gameDots.find(d => d.c===2 && d.r===6); 
+            
+            if(d1 && d2) {
+                finger.style.opacity = '1';
+                const styleSheetId = "tutorial-style-anim";
+                let oldStyle = document.getElementById(styleSheetId);
+                if(oldStyle) oldStyle.remove();
+
+                const styleSheet = document.createElement("style");
+                styleSheet.id = styleSheetId;
+                styleSheet.innerText = `
+                    @keyframes swipeGuide {
+                        0% { transform: translate(${d1.x}px, ${d1.y}px); opacity: 0; }
+                        20% { transform: translate(${d1.x}px, ${d1.y}px); opacity: 1; }
+                        80% { transform: translate(${d2.x}px, ${d2.y}px); opacity: 1; }
+                        100% { transform: translate(${d2.x}px, ${d2.y}px); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(styleSheet);
+                finger.style.animation = 'swipeGuide 2s infinite ease-in-out';
+            }
+        }
+
+        function getDemoEventPos(e) {
+            const rect = demoCanvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function getClosestDemoDot(x, y) {
+            for(let d of gameDots) { if (getDistance(x, y, d.x, d.y) < 25) return d; } return null;
+        }
+
+        function onDemoStart(e) {
+            if(gameState !== 'PLAYING' || movesLeft <= 0) return;
+            e.preventDefault();
+            const pos = getDemoEventPos(e);
+            startDot = getClosestDemoDot(pos.x, pos.y);
+            if(startDot) {
+                isDragging = true; currentMouseX = startDot.x; currentMouseY = startDot.y;
+                document.getElementById('tutorial-finger').style.display = 'none'; 
+                document.getElementById('instruction').style.opacity = '0';
+            }
+        }
+
+        function onDemoMove(e) {
+            if(!isDragging) return; e.preventDefault();
+            const pos = getDemoEventPos(e); currentMouseX = pos.x; currentMouseY = pos.y;
+        }
+
+        function onDemoEnd(e) {
+            if(!isDragging) return; e.preventDefault(); isDragging = false;
+            let pos;
+            if(e.changedTouches) {
+                const rect = demoCanvas.getBoundingClientRect();
+                pos = { x: e.changedTouches[0].clientX - rect.left, y: e.changedTouches[0].clientY - rect.top };
+            } else { pos = { x: currentMouseX, y: currentMouseY }; }
+
+            const endDot = getClosestDemoDot(pos.x, pos.y);
+            if(endDot && startDot.id !== endDot.id) {
+                const dist = getDistance(startDot.x, startDot.y, endDot.x, endDot.y);
+                if(dist > spacing * 0.7 && dist < spacing * 1.5) { processDemoMove(startDot, endDot); }
+            }
+            startDot = null;
+        }
+
+        demoCanvas.addEventListener('mousedown', onDemoStart); demoCanvas.addEventListener('mousemove', onDemoMove); window.addEventListener('mouseup', onDemoEnd);
+        demoCanvas.addEventListener('touchstart', onDemoStart, {passive: false}); demoCanvas.addEventListener('touchmove', onDemoMove, {passive: false}); window.addEventListener('touchend', onDemoEnd);
+
+        function processDemoMove(d1, d2) {
+            const lineId = getLineId(d1, d2);
+            if(gameLines.has(lineId)) return; 
+
+            gameLines.add(lineId);
+            drawnLinesCoords.push({ p1: d1, p2: d2, color: '#ff0000' });
+            
+            movesLeft--;
+            document.getElementById('moves-val').innerText = movesLeft;
+
+            let completedTriangles = 0;
+            for(let C of gameDots) {
+                if(C.id === d1.id || C.id === d2.id) continue;
+                if(gameLines.has(getLineId(d1, C)) && gameLines.has(getLineId(d2, C))) {
+                    const triId = getTriangleId(d1, d2, C);
+                    if(!gameTriangles.has(triId)) {
+                        gameTriangles.add(triId);
+                        filledTrianglesCoords.push({ p1: d1, p2: d2, p3: C, color: 'rgba(255, 0, 0, 0.5)' });
+                        completedTriangles++;
+                        
+                        showDemoPopUp(C.x, C.y);
+                        playerScore++;
+                        
+                        const scoreEl = document.getElementById('score-val');
+                        scoreEl.innerText = playerScore;
+                        scoreEl.style.transform = 'scale(1.5)';
+                        setTimeout(() => scoreEl.style.transform = 'scale(1)', 200);
+                    }
+                }
+            }
+
+            if(movesLeft <= 0) {
+                gameState = 'ENDED';
+                setTimeout(() => { document.getElementById('end-card').style.opacity = '1'; document.getElementById('end-card').style.pointerEvents = 'auto'; }, 1500);
+            }
+        }
+
+        function showDemoPopUp(x, y) {
+            const container = document.getElementById('pop-container');
+            const pop = document.createElement('div');
+            pop.className = 'pop-score pop-anim';
+            pop.innerText = '+1'; 
+            pop.style.left = x + 'px'; pop.style.top = y + 'px';
+            container.appendChild(pop);
+            setTimeout(() => { pop.remove(); }, 1200);
+        }
+
+        function drawDemoLoop() {
+            demoCtx.clearRect(0, 0, dWidth, dHeight);
+
+            filledTrianglesCoords.forEach(t => {
+                demoCtx.fillStyle = t.color;
+                demoCtx.beginPath(); demoCtx.moveTo(t.p1.x, t.p1.y); demoCtx.lineTo(t.p2.x, t.p2.y); demoCtx.lineTo(t.p3.x, t.p3.y); demoCtx.fill();
+                demoCtx.strokeStyle = t.color.replace('0.5', '1.0'); 
+                demoCtx.lineWidth = 3; demoCtx.lineJoin = 'round'; demoCtx.stroke();
             });
 
-            requestAnimationFrame(animate);
-        }
+            demoCtx.lineWidth = 4; demoCtx.lineCap = 'round';
+            drawnLinesCoords.forEach(l => {
+                demoCtx.strokeStyle = l.color;
+                demoCtx.beginPath(); demoCtx.moveTo(l.p1.x, l.p1.y); demoCtx.lineTo(l.p2.x, l.p2.y); demoCtx.stroke();
+            });
 
-        // Başlat
-        resize(); // İlk boyutlandırma ve şekilleri oluşturma
-        animate();
+            if(isDragging && startDot) {
+                demoCtx.strokeStyle = '#ff0000'; 
+                demoCtx.lineWidth = 4;
+                demoCtx.beginPath(); demoCtx.moveTo(startDot.x, startDot.y); demoCtx.lineTo(currentMouseX, currentMouseY); demoCtx.stroke();
+            }
+
+            for(let d of gameDots) {
+                demoCtx.fillStyle = '#222'; demoCtx.beginPath(); demoCtx.arc(d.x, d.y, 8, 0, Math.PI*2); demoCtx.fill();
+                demoCtx.fillStyle = '#f4f4f4'; demoCtx.beginPath(); demoCtx.arc(d.x, d.y, 4, 0, Math.PI*2); demoCtx.fill();
+                demoCtx.fillStyle = '#222'; demoCtx.beginPath(); demoCtx.arc(d.x, d.y, 1.5, 0, Math.PI*2); demoCtx.fill();
+                if(isDragging && startDot && startDot.id === d.id) {
+                    demoCtx.fillStyle = '#ff0000'; demoCtx.beginPath(); demoCtx.arc(d.x, d.y, 3, 0, Math.PI*2); demoCtx.fill();
+                }
+            }
+            demoAnimFrame = requestAnimationFrame(drawDemoLoop);
+        }
     </script>
 </body>
 </html>
