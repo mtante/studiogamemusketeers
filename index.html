@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Game Musketeers | KEYİFLİ, ZORLAYICI OYUNLAR</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- TEMA DEĞİŞKENLERİ --- */
+        :root {
+            --bg-dark: #030409;
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --neon-pink: #ff0055;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 17, 26, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        /* --- TEMEL AYARLAR --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- ARKA PLAN (CANVAS) --- */
+        #geometry-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0c16 0%, var(--bg-dark) 100%);
+        }
+
+        /* --- HERO (GİRİŞ BÖLÜMÜ) --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .studio-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            position: relative;
+            margin-bottom: 1rem;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        /* Başlığın içini hafif neon ile doldurma efekti */
+        .studio-title::before {
+            content: "Studio Game Musketeers";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            color: var(--neon-cyan);
+            -webkit-text-stroke: 0px;
+            filter: blur(15px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .slogan {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        /* --- OYUNLAR BÖLÜMÜ (GLASSMORPHISM) --- */
+        .portfolio-section {
+            padding: 5rem 2rem 10rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 4rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px var(--neon-purple);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* Cam Efektli Kart Tasarımı */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Kart Üzerine Gelme (Hover) Neon Parlaması */
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 243, 255, 0.5);
+            box-shadow: 0 15px 45px rgba(0, 243, 255, 0.15), 
+                        inset 0 0 20px rgba(0, 243, 255, 0.05);
+        }
+
+        .glass-card:nth-child(2):hover {
+            border-color: rgba(188, 19, 254, 0.5);
+            box-shadow: 0 15px 45px rgba(188, 19, 254, 0.15), 
+                        inset 0 0 20px rgba(188, 19, 254, 0.05);
+        }
+
+        .glass-card:nth-child(3):hover {
+            border-color: rgba(255, 0, 85, 0.5);
+            box-shadow: 0 15px 45px rgba(255, 0, 85, 0.15), 
+                        inset 0 0 20px rgba(255, 0, 85, 0.05);
+        }
+
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .game-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* --- BUTONLAR --- */
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-active {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .btn-active:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 30px var(--neon-cyan);
+        }
+
+        .btn-disabled {
+            background: rgba(255, 255, 255, 0.05);
+            color: #64748b;
+            border: 1px solid #334155;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-dev {
+            background: rgba(255, 170, 0, 0.1);
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.1);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            background: rgba(5, 7, 13, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .contact-email {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-main);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 2rem;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        .contact-email:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Animasyonlar */
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(0, 243, 255, 0.2), 0 0 20px rgba(0, 243, 255, 0.2); }
+            to { text-shadow: 0 0 20px rgba(0, 243, 255, 0.6), 0 0 40px rgba(0, 243, 255, 0.4); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .portfolio-section { padding: 3rem 1.5rem 6rem 1.5rem; }
+            .glass-card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="geometry-canvas"></canvas>
+
+    <header class="hero">
+        <h1 class="studio-title">Studio Game Musketeers</h1>
+        <p class="slogan">Keyifli ve Zorlayıcı</p>
+    </header>
+
+    <section class="portfolio-section">
+        <h2 class="section-title">PROJELERİMİZ</h2>
+        
+        <div class="games-grid">
+            
+            <div class="glass-card">
+                <div>
+                    <h3 class="game-title">The Shape Universe</h3>
+                    <p class="game-desc">Zeka ve stratejiyi birleştiren, evrenin sınırlarını zorlayan mobil bulmaca/aksiyon deneyimi. Kuralları sen belirle, evreni şekillendir.</p>
+                </div>
+                <!-- "#" kaldırıldı, target="_blank" eklendi -->
+                <a href="https://play.google.com/store/apps/details?id=com.StudioGameMUSKETEERS.TheShapeUniverse" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
+            </div>
+
+            <div class="glass-card">
+                <div>
+                    <h3 class="game-title">Shape Duels</h3>
+                    <p class="game-desc">Rekabetçi ve dinamik yapısıyla rakiplerine karşı şekillerin gücünü kullanarak düello yap. Arena yeteneklerini test etmeni bekliyor.</p>
+                </div>
+                <!-- "#" kaldırıldı, target="_blank" eklendi, class btn-active yapıldı ki tıklanabilsin -->
+                <a href="https://play.google.com/store/apps/details?id=com.StudioGameMusketeers.ShapeDuels" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
+            </div>
+
+            <div class="glass-card">
+                <div>
+                    <h3 class="game-title">İsimsiz Uzay Projesi</h3>
+                    <p class="game-desc">Yukarıdan bakışlı (top-down), mermi cehennemi (bullet hell) türünde roguelike uzay macerası. Uzay mekiği pilotu olarak "void credit" topla ve hayatta kal.</p>
+                </div>
+                <!-- Bu oyun çıkmadığı için pasif buton olarak bırakıldı -->
+                <a href="#" class="btn btn-dev">Geliştirme Aşamasında</a>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <a href="studiogamemusketeers@gmail.com" class="contact-email">studiogamemusketeers@gmail.com</a>
+        <p class="copyright">&copy; 2026 Studio Game Musketeers. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('geometry-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let shapes = [];
+        const colors = [
+            'rgba(0, 243, 255, 0.8)', // Cyan
+            'rgba(188, 19, 254, 0.8)', // Purple
+            'rgba(255, 0, 85, 0.8)'    // Pink
+        ];
+        
+        // Fare Pozisyonu
+        let mouse = { x: -1000, y: -1000 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        // Ekran boyutu ayarı
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initShapes(); // Ekran boyutu değiştiğinde şekilleri yeniden oluştur
+        }
+        window.addEventListener('resize', resize);
+        
+        // Şekil Sınıfı Oluşturma
+        class Shape {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 30 + 15; // Boyut 15 - 45 arası
+                this.type = Math.floor(Math.random() * 3); // 0: Üçgen, 1: Kare, 2: Altıgen
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Hız ve rotasyon
+                this.vx = (Math.random() - 0.5) * 1;
+                this.vy = (Math.random() - 0.5) * 1;
+                this.angle = Math.random() * Math.PI * 2;
+                this.vAngle = (Math.random() - 0.5) * 0.02;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                
+                ctx.beginPath();
+                
+                // Şekil Çizimleri
+                if (this.type === 0) {
+                    // Üçgen
+                    ctx.moveTo(0, -this.size);
+                    ctx.lineTo(this.size, this.size);
+                    ctx.lineTo(-this.size, this.size);
+                } else if (this.type === 1) {
+                    // Kare
+                    ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
+                } else {
+                    // Altıgen (Çokgen)
+                    for (let i = 0; i < 6; i++) {
+                        ctx.lineTo(this.size * Math.cos(i * Math.PI / 3), 
+                                   this.size * Math.sin(i * Math.PI / 3));
+                    }
+                }
+                ctx.closePath();
+
+                // Neon Efekti
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = this.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.stroke();
+
+                // Yarı saydam iç dolgu
+                ctx.fillStyle = this.color.replace('0.8)', '0.05)');
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            update() {
+                // Konum Güncelleme
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.vAngle;
+
+                // Fareden kaçma efekti (Repel)
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let maxDist = 150;
+
+                if (distance < maxDist) {
+                    let force = (maxDist - distance) / maxDist;
+                    this.x -= (dx / distance) * force * 3;
+                    this.y -= (dy / distance) * force * 3;
+                }
+
+                // Ekran sınırlarından geri dönme (Sonsuz döngü hissi)
+                if (this.x < -this.size) this.x = width + this.size;
+                if (this.x > width + this.size) this.x = -this.size;
+                if (this.y < -this.size) this.y = height + this.size;
+                if (this.y > height + this.size) this.y = -this.size;
+            }
+        }
+
+        // Şekilleri oluştur
+        function initShapes() {
+            shapes = [];
+            // Ekran boyutuna göre şekil sayısı belirle (mobilde daha az, PC'de daha çok)
+            const numShapes = window.innerWidth < 768 ? 20 : 50; 
+            for (let i = 0; i < numShapes; i++) {
+                shapes.push(new Shape());
+            }
+        }
+
+        // Animasyon Döngüsü
+        function animate() {
+            // Arka planı hafif saydam temizle ki hareket izi (trail) oluşsun
+            ctx.fillStyle = 'rgba(3, 4, 9, 0.3)'; 
+            ctx.fillRect(0, 0, width, height);
+
+            shapes.forEach(shape => {
+                shape.update();
+                shape.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Başlat
+        resize(); // İlk boyutlandırma ve şekilleri oluşturma
+        animate();
+    </script>
+</body>
+</html>
