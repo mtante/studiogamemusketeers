@@ -114,7 +114,7 @@
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Telefonlar için 280px'e düşürüldü */
             gap: 2.5rem;
         }
 
@@ -281,7 +281,6 @@
                     <h3 class="game-title">The Shape Universe</h3>
                     <p class="game-desc">Zeka ve stratejiyi birleştiren, evrenin sınırlarını zorlayan mobil bulmaca/aksiyon deneyimi. Kuralları sen belirle, evreni şekillendir.</p>
                 </div>
-                <!-- "#" kaldırıldı, target="_blank" eklendi -->
                 <a href="https://play.google.com/store/apps/details?id=com.StudioGameMUSKETEERS.TheShapeUniverse" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
             </div>
 
@@ -290,7 +289,6 @@
                     <h3 class="game-title">Shape Duels</h3>
                     <p class="game-desc">Rekabetçi ve dinamik yapısıyla rakiplerine karşı şekillerin gücünü kullanarak düello yap. Arena yeteneklerini test etmeni bekliyor.</p>
                 </div>
-                <!-- "#" kaldırıldı, target="_blank" eklendi, class btn-active yapıldı ki tıklanabilsin -->
                 <a href="https://play.google.com/store/apps/details?id=com.StudioGameMusketeers.ShapeDuels" target="_blank" rel="noopener noreferrer" class="btn btn-active">Play Store'da İncele</a>
             </div>
 
@@ -299,7 +297,6 @@
                     <h3 class="game-title">İsimsiz Uzay Projesi</h3>
                     <p class="game-desc">Yukarıdan bakışlı (top-down), mermi cehennemi (bullet hell) türünde roguelike uzay macerası. Uzay mekiği pilotu olarak "void credit" topla ve hayatta kal.</p>
                 </div>
-                <!-- Bu oyun çıkmadığı için pasif buton olarak bırakıldı -->
                 <a href="#" class="btn btn-dev">Geliştirme Aşamasında</a>
             </div>
 
@@ -307,7 +304,7 @@
     </section>
 
     <footer class="footer">
-        <a href="studiogamemusketeers@gmail.com" class="contact-email">studiogamemusketeers@gmail.com</a>
+        <a href="mailto:studiogamemusketeers@gmail.com" class="contact-email">studiogamemusketeers@gmail.com</a>
         <p class="copyright">&copy; 2026 Studio Game Musketeers. Tüm Hakları Saklıdır.</p>
     </footer>
 
@@ -326,6 +323,7 @@
         // Fare Pozisyonu
         let mouse = { x: -1000, y: -1000 };
 
+        // Fare Hareketleri
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX;
             mouse.y = e.clientY;
@@ -336,11 +334,28 @@
             mouse.y = -1000;
         });
 
-        // Ekran boyutu ayarı
+        // Mobil Dokunmatik (Touch) Desteği
+        window.addEventListener('touchmove', (e) => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        // Ekran boyutu ayarı (Mobil Optimizasyonlu)
+        let lastWidth = window.innerWidth;
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            initShapes(); // Ekran boyutu değiştiğinde şekilleri yeniden oluştur
+            
+            // Sadece ekranın genişliği değişirse şekilleri sıfırla (Telefonda aşağı kaydırırken pırpır yapmayı engeller)
+            if (shapes.length === 0 || window.innerWidth !== lastWidth) {
+                initShapes();
+                lastWidth = window.innerWidth;
+            }
         }
         window.addEventListener('resize', resize);
         
@@ -405,7 +420,7 @@
                 this.y += this.vy;
                 this.angle += this.vAngle;
 
-                // Fareden kaçma efekti (Repel)
+                // Fareden/Parmaktan kaçma efekti (Repel)
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
