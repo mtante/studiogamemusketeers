@@ -60,12 +60,15 @@
 
         .studio-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(3rem, 8vw, 6.5rem);
+            /* Mobilde ekrana sığması için min değer 1.5rem'e düşürüldü */
+            font-size: clamp(1.5rem, 8vw, 6.5rem); 
             font-weight: 900;
             color: transparent;
             -webkit-text-stroke: 1px var(--text-main);
             text-transform: uppercase;
-            letter-spacing: 8px;
+            /* Harf aralığı mobilde daralıp PC'de açılacak şekilde dinamik yapıldı */
+            letter-spacing: clamp(2px, 2vw, 8px); 
+            line-height: 1.2; /* Metin alt satıra kayarsa düzgün dursun */
             position: relative;
             margin-bottom: 1rem;
             animation: textGlow 3s ease-in-out infinite alternate;
@@ -84,13 +87,14 @@
             filter: blur(15px);
             opacity: 0.6;
             z-index: -1;
+            pointer-events: none;
         }
 
         .slogan {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-size: clamp(1.1rem, 3vw, 1.8rem);
             font-weight: 600;
             color: var(--text-muted);
-            letter-spacing: 3px;
+            letter-spacing: clamp(1px, 1vw, 3px);
             text-transform: uppercase;
             text-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
@@ -257,6 +261,7 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .hero { padding: 1rem; }
             .portfolio-section { padding: 3rem 1.5rem 6rem 1.5rem; }
             .glass-card { padding: 2rem 1.5rem; }
         }
